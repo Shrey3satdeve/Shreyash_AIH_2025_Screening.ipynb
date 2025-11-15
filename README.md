@@ -1,90 +1,87 @@
-README — Air Quality Prediction & Analysis (Delhi)
-1. Selected Option
+🌫️ Air Quality Prediction & Analysis (Delhi)
 
-I selected Option 2 — AQI & PM2.5 Prediction for Delhi
-(using the city_day.csv dataset from the Kaggle dataset “Air Quality Data in India”).
+Forecasting PM2.5 levels using Machine Learning + Time-Series Features
 
-2. Methods and Models Used
-Data Loading
+<p align="center"> <img src="assets/air_quality_banner.png" alt="Air Quality Banner" width="85%"> </p>
+🚀 Badges
+<p align="left"> <img src="https://img.shields.io/badge/Python-3.10-blue" /> <img src="https://img.shields.io/badge/Machine%20Learning-RandomForest-green" /> <img src="https://img.shields.io/badge/TimeSeries-Enabled-orange" /> <img src="https://img.shields.io/badge/Data%20Source-Kaggle-blueviolet" /> <img src="https://img.shields.io/badge/Status-Completed-brightgreen" /> <img src="https://img.shields.io/badge/Forecast-PM2.5-red" /> </p>
+🧭 1. Selected Option
 
-Dataset loaded using kagglehub.dataset_download() (no kaggle.json required).
+I selected Option 2 → Next-Day PM2.5 Prediction for Delhi using the
+city_day.csv dataset from Kaggle (Air Quality Data in India).
 
-Loaded city_day.csv into a DataFrame of shape (29531, 16).
+📂 2. Data Loading
 
-Initial Filtering & Cleaning
+Loaded dataset via:
 
-Filtered the dataset for Delhi, resulting in 2009 rows.
+kagglehub.dataset_download('rohanrao/air-quality-data-in-india', 'city_day.csv')
 
-Converted 'Date' column to datetime format.
 
-Identified missing values for:
+📌 Dataset Shape: 29,531 rows × 16 columns
 
-PM2.5, PM10, NO, NO2, NH3, SO2, O3, Xylene, AQI, AQI_Bucket, etc.
-
-Imputed:
+🧹 3. Data Cleaning
+✔ Filtered for Delhi → 2,009 rows
+✔ Converted 'Date' to datetime
+✔ Handled Missing Values
 
 Numerical columns → median
 
 AQI_Bucket → mode
 
-Final cleaned dataset had 0 missing values.
+All missing values successfully filled.
 
-Feature Engineering
+✨ Final clean dataset → 0 missing values
+⚙️ 4. Feature Engineering
+✔ Set Date as index
+✔ Created lag features for 12 pollutants:
 
-Set 'Date' as index for time-series operations.
+Lag 1, 2, 3 → total 36 engineered features
 
-Created lag features (1-day, 2-day, 3-day) for 12 pollutants → 36 new features.
+✔ Defined prediction target:
+df_delhi['PM2.5_target'] = df_delhi['PM2.5'].shift(-1)
 
-Created target variable:
+📦 Final Modeling Dataset:
 
-PM2.5_target = PM2.5.shift(-1)
+2005 samples
+
+51 features + 1 target = 52 columns
+
+✂️ 5. Train/Test Split
+
+Performed 80/20 chronological split to preserve time order:
+
+Split	Samples
+Train	1,604
+Test	401
 
 
-(next day prediction)
-
-Final modeling dataset:
-
-2005 rows
-
-52 columns (51 features + target)
-
-Train/Test Split
-
-Time-series chronological split (80/20):
-
-Training samples: 1604
-
-Testing samples: 401
-
-Model Used
-
+🤖 6. Model Used
 RandomForestRegressor
-Parameters:
-
 RandomForestRegressor(n_estimators=100, random_state=42)
 
 
-Dropped non-numeric features (City, AQI_Bucket) to avoid errors.
+Dropped non-numeric features:
 
-3. Results
-Model Performance
+['City', 'AQI_Bucket']
+
+📈 7. Model Performance
 Metric	Score
 MAE	23.820
 RMSE	38.596
-R² Score	0.768
+R²	0.768
 
-This indicates the model explains 76.8% of the variance in PM2.5 levels — strong for environmental time-series data.
+✔ Explains 76.8% of PM2.5 variance
+✔ Stable & reliable model for air-quality forecasting
 
-Prediction for Next Day
+🔮 8. Next-Day Prediction
 
-Last date in dataset: 2020-06-30
+📅 Last date in data: 2020-06-30
+🌤️ Predicted PM2.5 for 2020-07-01:
 
-Predicted PM2.5 for 2020-07-01:
+👉 45.131
+📊 9. Pollutant Correlation Analysis
 
-📌 Predicted PM2.5: 45.131
-Correlation Insight (for Dashboard)
-
-Top pollutant correlations with PM2.5 (Delhi):
+Correlation with PM2.5:
 
 Pollutant	Correlation
 PM10	0.848
@@ -92,26 +89,21 @@ Benzene	0.697
 NO	0.668
 NO2	0.648
 NH3	0.586
-Key Insight
+🔍 Key Insight
 
-PM10 is the pollutant most strongly correlated with PM2.5 in Delhi, suggesting strong co-emission sources and shared atmospheric behaviors.
+PM10 is the strongest predictor of PM2.5
 
-A bar chart was created for dashboard integration visualizing these correlations.
+Both pollutants share common emission sources.
 
-4. Summary
+
+📝 10. Summary
 
 This project successfully:
 
-Loaded and cleaned Indian air quality data
-
-Prepared a time-series feature set with lags
-
-Built a RandomForest model to predict next-day PM2.5
-
-Achieved solid evaluation performance
-
-Identified PM10 as the key co-pollutant
-
-Produced a prediction for the next day (July 1, 2020)
-
-The dataset and model pipeline are fully prepared for integration into an air quality forecasting dashboard.
+✔ Loaded and cleaned Indian air-quality data
+✔ Generated lag features for time-series prediction
+✔ Built a RandomForest model predicting next-day PM2.5
+✔ Achieved strong metrics (R² = 0.768)
+✔ Identified PM10 as the strongest co-pollutant
+✔ Forecasted PM2.5 for 2020-07-01: 45.131
+✔ Prepared visualizations for dashboard integration
